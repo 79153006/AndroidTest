@@ -1,5 +1,8 @@
 package jp.hokudai.isdl.ryoheiichii.testbutton;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -9,10 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener{
+public class MainActivity extends AppCompatActivity{
 
     private ImageView imageView;
-    private int preDx,preDy,newDx,newDy;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,30 +22,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         imageView = (ImageView)findViewById(R.id.image_view);
 
-        imageView.setOnTouchListener(this);
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(),R.drawable.bag);
 
-        preDx=preDy=newDy=newDx=0;
+        int imageWidth = bitmap1.getWidth();
+        int imageHeight = bitmap1.getHeight();
 
-    }
+        Matrix matrix = new Matrix();
 
-    public boolean onTouch(View v, MotionEvent event) {
-        newDx = (int) event.getRawX();
-        newDy = (int) event.getRawY();
+        matrix.preScale(-1.0f,1.0f);
 
-        switch (event.getAction()){
-            case MotionEvent.ACTION_MOVE:
-                int dx = imageView.getLeft() + (newDx - preDx);
-                int dy = imageView.getTop() + (newDy - preDy);
+        Bitmap bitmap2 = Bitmap.createBitmap(bitmap1,0,0,imageWidth,imageHeight,matrix,true);
 
-                imageView.layout(dx,dy,dx + imageView.getWidth(),dy+imageView.getHeight());
+        imageView.setImageBitmap(bitmap2);
 
-                break;
-        }
-
-        preDx = newDx;
-        preDy = newDy;
-
-        return true;
     }
 
 }
